@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>v-resume for Business | アバター動画採用プラットフォーム</title>
+    <style>
+        /* --- Base Settings (Cyan Theme) --- */
+        :root {
+            /* Cyan / Teal Palette */
+            --primary-color: #06b6d4;      /* Main Cyan */
+            --primary-dark: #0891b2;       /* Darker Cyan */
+            --secondary-color: #22d3ee;    /* Light Cyan */
+            --accent-color: #ecfeff;       /* Very Light Cyan Background */
+            --text-main: #164e63;          /* Dark Slate (Blue-ish Grey) */
+            --text-sub: #475569;           /* Slate Grey */
+            --bg-light: #f8fafc;
+            --white: #ffffff;
+            --gradient-main: linear-gradient(135deg, #ecfeff 0%, #cffafe 100%);
+            --gradient-primary: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+            --shadow-card: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+            --shadow-float: 0 20px 25px -5px rgba(6, 182, 212, 0.15), 0 10px 10px -5px rgba(6, 182, 212, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            color: var(--text-main);
+            line-height: 1.6;
+            background-color: var(--white);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a { text-decoration: none; }
+        ul { list-style: none; }
+
+        /* --- Components --- */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 32px;
+            background: var(--gradient-primary);
+            color: var(--white);
+            border-radius: 4px; /* Slightly sharper for business */
+            font-weight: bold;
+            font-size: 1rem;
+            transition: all 0.2s;
+            box-shadow: 0 4px 6px rgba(6, 182, 212, 0.2);
+            cursor: pointer;
+            border: none;
+            letter-spacing: 0.05em;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 12px rgba(6, 182, 212, 0.3);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            box-shadow: none;
+        }
+        .btn-outline:hover {
+            background: var(--accent-color);
+            transform: translateY(-2px);
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--text-main);
+            font-weight: 800;
+        }
+        
+        .section-title span {
+            border-bottom: 4px solid var(--secondary-color);
+        }
+
+        .section-desc {
+            text-align: center;
+            color: var(--text-sub);
+            margin-bottom: 4rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* --- Header --- */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .header-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .logo svg {
+            width: 28px;
+            height: 28px;
+            fill: var(--primary-color);
+        }
+        
+        .logo span {
+            font-size: 0.8rem;
+            background: var(--bg-light);
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: var(--text-sub);
+            margin-left: 5px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .header-nav {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .link-to-user {
+            font-size: 0.9rem;
+            color: var(--text-sub);
+            font-weight: 600;
+        }
+        .link-to-user:hover {
+            color: var(--primary-color);
+        }
+
+        /* --- Hero Section --- */
+        .hero {
+            padding: 160px 0 100px;
+            background: var(--gradient-main);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 50px;
+        }
+
+        .hero-text {
+            flex: 1;
+        }
+
+        .hero-label {
+            display: inline-block;
+            background: var(--white);
+            color: var(--primary-dark);
+            font-weight: bold;
+            padding: 6px 16px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 900;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.03em;
+        }
+
+        .hero h1 .highlight {
+            color: var(--primary-color);
+            position: relative;
+            display: inline-block;
+        }
+        
+        .hero h1 .sub-catch {
+            display: block;
+            font-size: 1.5rem;
+            margin-top: 10px;
+            font-weight: 700;
+            color: var(--text-sub);
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            color: var(--text-sub);
+            margin-bottom: 2.5rem;
+            line-height: 1.8;
+        }
+
+        .hero-visual {
+            flex: 1;
+            position: relative;
+        }
+
+        /* Dashboard-like Visual */
+        .dashboard-mockup {
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: var(--shadow-float);
+            padding: 20px;
+            position: relative;
+            z-index: 2;
+            border: 1px solid rgba(6, 182, 212, 0.1);
+        }
+        
+        .dash-header {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid #f1f5f9;
+            padding-bottom: 15px;
+            margin-bottom: 15px;
+        }
+        .dash-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px 0;
+            border-bottom: 1px solid #f8fafc;
+        }
+        .dash-avatar {
+            width: 40px;
+            height: 40px;
+            background: #e2e8f0;
+            border-radius: 50%;
+        }
+        .dash-line { height: 8px; background: #f1f5f9; border-radius: 4px; flex: 1; }
+        .dash-btn { width: 80px; height: 24px; background: var(--secondary-color); border-radius: 4px; }
+
+        .floating-card {
+            position: absolute;
+            background: var(--white);
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: var(--shadow-card);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            color: var(--text-main);
+            z-index: 3;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        .card-1 { top: -20px; right: -20px; border-left: 4px solid var(--primary-color); }
+        .card-2 { bottom: -20px; left: -20px; border-left: 4px solid #f59e0b; }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        /* --- Problems --- */
+        .section-grey {
+            background-color: var(--bg-light);
+            padding: 80px 0;
+        }
+
+        .problem-box {
+            background: var(--white);
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: var(--shadow-card);
+            text-align: center;
+        }
+        .problem-title {
+            font-size: 1.4rem;
+            margin-bottom: 2rem;
+            color: var(--text-sub);
+        }
+        .problem-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+        }
+        .problem-item h3 {
+            font-size: 3rem;
+            color: #cbd5e1;
+            margin-bottom: 10px;
+        }
+        .problem-item p {
+            font-weight: bold;
+        }
+
+        /* --- Features --- */
+        .section { padding: 100px 0; }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+        }
+
+        .feature-card {
+            padding: 30px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            transition: 0.3s;
+        }
+        .feature-card:hover {
+            border-color: var(--primary-color);
+            background: var(--accent-color);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--gradient-primary);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .feature-icon svg {
+            width: 30px;
+            height: 30px;
+            fill: var(--white);
+        }
+
+        .feature-card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 15px;
+        }
+
+        /* --- CTA Section --- */
+        .cta-section {
+            background: #164e63;
+            color: var(--white);
+            text-align: center;
+            padding: 80px 0;
+        }
+        .cta-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .cta-section p {
+            color: #cffafe;
+            margin-bottom: 2.5rem;
+            font-size: 1.1rem;
+        }
+        .cta-btn-white {
+            background: var(--white);
+            color: var(--primary-dark);
+            padding: 15px 50px;
+            font-size: 1.2rem;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .cta-btn-white:hover {
+            background: #f1f5f9;
+        }
+
+        /* --- Footer --- */
+        footer {
+            background: #0f172a;
+            color: #94a3b8;
+            padding: 40px 0;
+            text-align: center;
+            font-size: 0.85rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-inner { flex-direction: column; text-align: center; }
+            .hero h1 { font-size: 2.2rem; }
+            .hero h1 .sub-catch { font-size: 1.2rem; }
+            .problem-grid { grid-template-columns: 1fr; }
+            .floating-card { display: none; }
+        }
+        
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        .fade-in-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container header-inner">
+            <a href="#" class="logo">
+                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>
+                v-resume <span>for Business</span>
+            </a>
+            <nav class="header-nav">
+                <a href="index.html" class="link-to-user">求職者の方はこちら &gt;</a>
+                <button class="btn js-cta-btn">無料で開始する</button>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container hero-inner fade-in-up">
+            <div class="hero-text">
+                <span class="hero-label">NEW RECRUITING PLATFORM</span>
+                <h1>
+                    <span class="highlight">一次面接は、<br>もう終わっています。</span>
+                    <span class="sub-catch">書類選考で落としていた人材の中に、<br>本当のスターがいたとしたら？</span>
+                </h1>
+                <p>履歴書やESからは見えない「人柄」「話し方」「熱意」。<br>
+                V-resumeなら、会う前からそれらが全てわかります。<br>
+                アバターによる公平な評価で、隠れた優秀層を発掘する採用ツール。</p>
+                <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                    <button class="btn js-cta-btn" style="padding: 15px 40px;">無料で導入相談</button>
+                    <button class="btn btn-outline js-cta-btn">資料ダウンロード</button>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="dashboard-mockup">
+                    <div class="dash-header">
+                        <div style="font-weight:bold; color:var(--text-sub);">Candidate List</div>
+                        <div style="color:var(--primary-color);">Match: High</div>
+                    </div>
+                    <div class="dash-row">
+                        <div class="dash-avatar" style="background:var(--secondary-color);"></div>
+                        <div class="dash-line" style="width: 50%;"></div>
+                        <div class="dash-btn"></div>
+                    </div>
+                    <div class="dash-row">
+                        <div class="dash-avatar"></div>
+                        <div class="dash-line"></div>
+                        <div class="dash-btn"></div>
+                    </div>
+                    <div class="dash-row">
+                        <div class="dash-avatar"></div>
+                        <div class="dash-line" style="width: 70%;"></div>
+                        <div class="dash-btn"></div>
+                    </div>
+                </div>
+                <div class="floating-card card-1">
+                    <span>⚡ 採用工数 -60%</span>
+                </div>
+                <div class="floating-card card-2">
+                    <span>🎯 面接通過率 2.5倍</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section-grey">
+        <div class="container fade-in-up">
+            <div class="section-title">書類選考の<span>限界</span></div>
+            <p class="section-desc">「会ってみたらイメージと違った」「書類は完璧だったのに…」<br>従来のフローでは、ミスマッチは防げません。</p>
+            
+            <div class="problem-box">
+                <div class="problem-title">こんな課題はありませんか？</div>
+                <div class="problem-grid">
+                    <div class="problem-item">
+                        <h3>01</h3>
+                        <p>書類選考で<br>良い人を落としている</p>
+                    </div>
+                    <div class="problem-item">
+                        <h3>02</h3>
+                        <p>一次面接の<br>通過率が低い</p>
+                    </div>
+                    <div class="problem-item">
+                        <h3>03</h3>
+                        <p>日程調整の<br>工数が膨大</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">V-resumeで<span>採用が変わる</span></h2>
+            <p class="section-desc">履歴書不要。アバター動画を見て、オファーを送るだけ。<br>シンプルで本質的な新しい採用体験。</p>
+
+            <div class="feature-grid">
+                <div class="feature-card fade-in-up">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                    </div>
+                    <h3>選考スピードが劇的向上</h3>
+                    <p>応募書類を読み込む時間は不要です。1分の動画を見るだけで、候補者のコミュニケーション能力や雰囲気を瞬時に判断できます。</p>
+                </div>
+                <div class="feature-card fade-in-up">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+                    </div>
+                    <h3>隠れた人材の発掘</h3>
+                    <p>履歴書の書き方が苦手でも、素晴らしい対人スキルを持つ人材は沢山います。書類選考では出会えなかった層にアプローチ可能です。</p>
+                </div>
+                <div class="feature-card fade-in-up">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                    </div>
+                    <h3>バイアスフリーでCSR貢献</h3>
+                    <p>アバターと音声統一により、性別や容姿による無意識のバイアスを排除。公平な採用活動の実践として、企業ブランディングにも貢献します。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <div class="container fade-in-up">
+            <h2>書類で判断するのは、<br>もう終わりにしませんか？</h2>
+            <p>初期費用0円。まずは実際の候補者動画をご覧ください。</p>
+            <button class="btn cta-btn-white js-cta-btn">無料でアカウント作成</button>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div style="font-weight:bold; font-size:1.2rem; color:white; margin-bottom:10px;">v-resume for Business</div>
+            <p>&copy; 2024 V-resume All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // CTA Action
+        const buttons = document.querySelectorAll('.js-cta-btn');
+        buttons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                window.open('https://v-resume-chi.vercel.app/', '_blank');
+            });
+        });
+
+        // Animation
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        const fadeElements = document.querySelectorAll('.fade-in-up');
+        fadeElements.forEach(el => observer.observe(el));
+    </script>
+</body>
+</html>
